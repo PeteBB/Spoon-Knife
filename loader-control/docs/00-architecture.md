@@ -219,6 +219,7 @@ loader-control/
     00-architecture.md          this file
     01-hardware-selection.md    controller, grips, valves, engine, bus layout
     02-operator-interface.md    axis assignment, button map, function behaviour
+    03-sourcing-and-supply.md   purchase points, second sourcing, ramp strategy
   src/
     st/                         IEC 61131-3 Structured Text, portable
       GVL_Types.st              enums, structs, tuning constants
