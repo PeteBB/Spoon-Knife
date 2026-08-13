@@ -1,5 +1,12 @@
 # Frame Concept, Balance and Stability
 
+> **REVISED — see `07-dozing-and-drawbar.md`.** The capacity target has since
+> dropped to ~3,000–3,500 lb ROC in favour of keeping horsepower for PTO,
+> drawbar and dozing. Operating weight lands around 11,000–13,000 lb, and the
+> CDL conflict analysed in section 1 below largely resolves. The load-case
+> analysis, the ballast strategy and the lift-geometry consequence all still
+> stand — only the numbers move.
+
 **Boundary note up front:** frame structure is not something I can finish for
 you. Section loads, weldment design and FEA need a mechanical engineer and a
 model. What follows is the load-case analysis, the balance targets, the design

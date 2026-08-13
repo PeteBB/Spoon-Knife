@@ -79,13 +79,13 @@ VAR CONSTANT
     C_TABLE_N     : INT  := 9;          (* -10 .. +70 degrees *)
 
     (* --- machine constants: PLACEHOLDERS --------------------------------- *)
-    C_MACHINE_LB      : REAL := 16000.0;
+    C_MACHINE_LB      : REAL := 12500.0;
     C_MACH_ARM_IN     : REAL := 42.0;   (* fulcrum -> machine CG, horizontal  *)
     C_MACH_CG_HGT_IN  : REAL := 30.0;
     C_BALLAST_ARM_IN  : REAL := 95.0;   (* fulcrum -> hitch                   *)
     C_BALLAST_HGT_IN  : REAL := 20.0;
 
-    C_RATED_LB        : REAL := 5000.0;
+    C_RATED_LB        : REAL := 3200.0;
 
     (* --- weighing window -------------------------------------------------- *)
     C_WEIGH_RATE_MIN  : REAL := 2.0;    (* deg/s - must be moving steadily    *)
