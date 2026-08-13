@@ -52,6 +52,23 @@ TYPE
         rAuxExpo         : REAL := 0.20;
         rAuxRate         : REAL := 3.0;
     END_STRUCT;
+
+    (* Loaded automatically when an attachment is coupled, from the ID node on
+       the attachment CAN bus. Falls back to a conservative default profile for
+       dumb attachments and for anything the controller does not recognise. *)
+    ST_AttachmentProfile : STRUCT
+        sName            : STRING(20);
+        wId              : WORD;
+        rMaxFlowScale    : REAL := 1.0;    (* clamp on aux command, 0..1      *)
+        rAuxRampUp       : REAL := 2.0;    (* command units/s                 *)
+        rAuxRampDown     : REAL := 4.0;
+        xAllowDetent     : BOOL := TRUE;   (* FALSE for anything with teeth   *)
+        xAllowHighFlow   : BOOL := FALSE;
+        xAllowReverse    : BOOL := TRUE;   (* FALSE for one-way motors        *)
+        rMaxPressureBar  : REAL := 210.0;  (* aux circuit protection limit    *)
+        rSoftStartS      : REAL := 0.5;    (* ramp when leaving neutral       *)
+        xIsRecognised    : BOOL := FALSE;  (* FALSE = dumb/unknown attachment *)
+    END_STRUCT;
 END_TYPE
 
 

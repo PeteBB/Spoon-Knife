@@ -115,17 +115,23 @@ aux detent request, high-flow request, float request, RTD set/recall, horn,
 door/canopy, filter restriction, air filter, coolant level, hydraulic level.
 
 ### Outputs
+
+Superseded in part by the CAN-centric decision in `01-hardware-selection.md`:
+the loader and aux sections are commanded over CAN through PVED-CC actuators on
+the PVG 32 bank, not by controller current outputs. Only the propel pumps and
+the simple on/off solenoids remain hard-wired.
+
 | Output | Type |
 |---|---|
 | Propel pump fwd/rev EDC coils (×4: L-fwd, L-rev, R-fwd, R-rev) | Current-controlled PWM w/ dither |
-| Lift raise / lower | Current-controlled PWM |
-| Tilt back / dump | Current-controlled PWM |
-| Aux A / B | Current-controlled PWM |
+| Lift raise / lower | CAN — PVG 32 section |
+| Tilt back / dump | CAN — PVG 32 section |
+| Aux A / B | CAN — PVG 32 section |
 | High-flow enable | Digital |
 | 2-speed shift | Digital |
 | Ride control | Digital |
 | Park brake release | Digital, safety-relevant |
-| Float | Digital |
+| Float | CAN — PVG 32 section, 4th position |
 
 ### J1939 (engine)
 Consume: EEC1 (engine speed, torque mode, driver demand torque), EEC2
@@ -211,13 +217,21 @@ Steps 1–3 and 5 I can do most of the work on. Step 4 is you and a machine.
 loader-control/
   docs/
     00-architecture.md          this file
+    01-hardware-selection.md    controller, grips, valves, engine, bus layout
+    02-operator-interface.md    axis assignment, button map, function behaviour
   src/
     st/                         IEC 61131-3 Structured Text, portable
       GVL_Types.st              enums, structs, tuning constants
+      GVL_OperatorMap.st        button ids, function enum, default bindings
       FB_AxisConditioning.st    deadband, expo, rate limiting, plausibility
       FB_DriveMixer.st          propel + steer -> left/right track command
       FB_ProportionalOut.st     normalized command -> coil current
       FB_AntiStall.st           engine droop -> propel derate
-      PRG_Propel.st             10 ms propel task, wires the above together
+      FB_ButtonInput.st         debounce, short/long/double/hold gestures
+      FB_FunctionDispatch.st    binding table -> function requests
+      FB_LoaderControl.st       self-level, return-to-dig, float, height limit
+      FB_AuxControl.st          proportional aux, detent, high flow, protection
+      PRG_Propel.st             10 ms task
+      PRG_Loader.st             50 ms task
     hal/                        platform-specific I/O binding (per controller)
 ```
