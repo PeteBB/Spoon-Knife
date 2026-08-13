@@ -74,6 +74,11 @@ VAR_OUTPUT
 
     rEffortPct      : REAL;   (* 0..100, live tractive effort, for the display*)
     rGroundSpeedKph : REAL;   (* estimate, published for ride control etc.    *)
+
+    (* Worst-case slip of the two tracks, 0..1. Consumed by FB_HitchControl
+       for slip-referenced draft control - see
+       docs/05-rear-implement-architecture.md section 7. *)
+    rSlipRatioMax   : REAL;
 END_VAR
 
 VAR CONSTANT
@@ -275,7 +280,17 @@ ELSE
     rSlipTimerR := 0.0;
     rSlipDerL   := 1.0;
     rSlipDerR   := 1.0;
+    rSlipRatioL := 0.0;
+    rSlipRatioR := 0.0;
 END_IF;
+
+(* Publish the worse of the two for the hitch's draft loop. *)
+IF rSlipRatioL > rSlipRatioR THEN
+    rSlipRatioMax := rSlipRatioL;
+ELSE
+    rSlipRatioMax := rSlipRatioR;
+END_IF;
+IF rSlipRatioMax < 0.0 THEN rSlipRatioMax := 0.0; END_IF;
 
 (* =========================================================================
    4. Apply, and publish effort for the display

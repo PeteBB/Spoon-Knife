@@ -129,6 +129,13 @@ new plumbing; specifying it now costs a pump upgrade.
 
 ## Engine
 
+> **Superseded by the rear-implement decision.** Adding a direct-drive PTO puts
+> 40–50 hp at the shaft on top of the loader, hitch, remotes and propel
+> circuits, and **PTO horsepower is the number ag buyers compare**. Plan on the
+> 95–110 hp class (Kubota V3800 or equivalent) instead of the sizing below.
+> See `05-rear-implement-architecture.md` §3 — and settle this before opening
+> the engine account, since it is the longest-lead item on the machine.
+
 **Kubota V3307-CR-T** (~74 hp, Tier 4 Final / Stage V) or **Yanmar 4TNV98C**.
 
 Both are proven in this class, both have mature J1939 interfaces, both have
@@ -179,7 +186,7 @@ between selling a loader and selling a system.
 |---|---|---|
 | **CAN1 — Machine** | 250 kbit/s | Joysticks, display, PVED-CC valve sections, rear I/O expander |
 | **CAN2 — Powertrain** | 250 kbit/s | Engine ECU (J1939), aftertreatment |
-| **CAN3 — Attachment** | 250 kbit/s | Attachment ID node, smart attachments |
+| **CAN3 — Implement / ISOBUS** | 250 kbit/s | Front attachment ID node, rear ISOBUS implements (ISO 11783) — see `05-rear-implement-architecture.md` §8 |
 | **CAN4 — Service / telematics** | 500 kbit/s | Diagnostic port, telematics modem, grade control |
 
 Keep the engine on its own bus. Engine ECUs are chatty and you do not want

@@ -59,6 +59,53 @@ TYPE
         rAuxRate         : REAL := 3.0;
     END_STRUCT;
 
+    E_PtoMode : (
+        PTO_540   := 0,   (* 540 rpm at rated engine speed                   *)
+        PTO_540E  := 1,   (* 540 rpm at reduced engine speed - economy       *)
+        PTO_1000  := 2
+    );
+
+    E_PtoState : (
+        PTO_OFF       := 0,
+        PTO_FILL      := 1,   (* taking up clutch clearance, no torque yet   *)
+        PTO_MODULATE  := 2,   (* ramping torque, droop-aware                 *)
+        PTO_LOCKED    := 3,
+        PTO_FAULT     := 4
+    );
+
+    E_PtoInhibit : (
+        PTOINH_NONE          := 0,
+        PTOINH_NO_OPERATOR   := 1,
+        PTOINH_ENGINE_OFF    := 2,
+        PTOINH_NEEDS_REQUEST := 3,   (* must re-request - never auto-resume  *)
+        PTOINH_OVERLOAD      := 4,
+        PTOINH_CLUTCH_SLIP   := 5,
+        PTOINH_AUTO_RAISED   := 6    (* auto-PTO, hitch above threshold      *)
+    );
+
+    E_HeadlandState : (
+        HL_WORKING   := 0,
+        HL_RAISING   := 1,   (* lifting out of work                          *)
+        HL_HEADLAND  := 2,   (* up, PTO stopped, waiting for the turn         *)
+        HL_SPOOLING  := 3,   (* PTO back up to speed BEFORE entering ground   *)
+        HL_LOWERING  := 4
+    );
+
+    (* Rear implement, from the ISOBUS node or selected on the display for
+       dumb implements. Ramp time is the important field: a rotary cutter has
+       enormous rotational inertia and slamming the clutch into it shocks the
+       whole driveline. *)
+    ST_ImplementProfile : STRUCT
+        sName           : STRING(20);
+        rPtoRampS       : REAL := 2.0;    (* clutch modulation time, s       *)
+        rWorkingDepth   : REAL := 0.30;   (* hitch position 0..1             *)
+        rDraftBlend     : REAL := 0.0;    (* 0 = position, 1 = full draft    *)
+        rDropRate       : REAL := 0.5;    (* lowering speed limit, 0..1      *)
+        xUsesPto        : BOOL := FALSE;
+        xAutoPto        : BOOL := TRUE;   (* stop PTO when hitch raised      *)
+        xIsRecognised   : BOOL := FALSE;
+    END_STRUCT;
+
     (* Loaded automatically when an attachment is coupled, from the ID node on
        the attachment CAN bus. Falls back to a conservative default profile for
        dumb attachments and for anything the controller does not recognise. *)
