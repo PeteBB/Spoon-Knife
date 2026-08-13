@@ -47,6 +47,12 @@ TYPE
         rDecelRate       : REAL := 2.5;    (* faster than accel, deliberately  *)
         rMaxSpeedScale   : REAL := 1.0;    (* 0.1 .. 1.0 top-speed clamp       *)
         rSteerGainAtTop  : REAL := 0.45;   (* steering authority at full speed *)
+        (* 1.0 = skid (preserve turn radius) .. 0.0 = crawler (preserve
+           forward speed). See FB_DriveMixer. Default leans slightly toward
+           crawler because the load-based auto-bias only ever pushes further
+           that way - starting at pure skid would make the bias one-sided. *)
+        rSteerPriority   : REAL := 0.85;
+        rRimpullSetting  : REAL := 1.0;    (* tractive effort ceiling, 0.3..1  *)
         rLoaderExpo      : REAL := 0.25;
         rLoaderRate      : REAL := 2.0;
         rAuxExpo         : REAL := 0.20;

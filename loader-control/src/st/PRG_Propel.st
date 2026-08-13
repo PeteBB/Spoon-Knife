@@ -33,6 +33,7 @@ VAR
     fbSteerAxis   : FB_AxisConditioning;
     fbMixer       : FB_DriveMixer;
     fbAntiStall   : FB_AntiStall;
+    fbTraction    : FB_TractiveControl;
     fbLeftPump    : FB_ProportionalOut;
     fbRightPump   : FB_ProportionalOut;
 
@@ -45,6 +46,8 @@ VAR
     rSpeedScale      : REAL;
     rThermalDerate   : REAL := 1.0;
     rTotalDerate     : REAL;
+    rSteerPrio       : REAL;
+    rLoadBias        : REAL;
 END_VAR
 
 (* =========================================================================
@@ -151,21 +154,62 @@ END_CASE;
 (* =========================================================================
    5. Mix and drive the pumps
    ========================================================================= *)
+(* --- steering strategy: skid vs crawler ---------------------------------
+   The machine BECOMES A CRAWLER LOADER AS THE LOAD COMES ON. Light work gets
+   the operator's chosen bias - usually near-skid, for a tight turning radius
+   in confined spaces. As tractive effort builds, the mix slides toward
+   crawler behaviour so the machine keeps pushing through a steering
+   correction instead of washing out of the cut.
+
+   That transition is the crossover concept in one variable, and the operator
+   never has to ask for it.
+
+   rEffortPct is one scan old here (FB_TractiveControl runs after the mixer).
+   At 10 ms that is immaterial - tractive load does not change in 10 ms. *)
+rSteerPrio := stProfile.rSteerPriority;
+
+IF fbTraction.rEffortPct > 60.0 THEN
+    rLoadBias := (fbTraction.rEffortPct - 60.0) / 40.0;
+    IF rLoadBias > 1.0 THEN rLoadBias := 1.0; END_IF;
+    rSteerPrio := rSteerPrio * (1.0 - rLoadBias);
+END_IF;
+
+(* Precision work overrides everything: in creep the operator wants the tight,
+   predictable radius, not tractive effort. *)
+IF eSpeedMode = SPEED_CREEP THEN
+    rSteerPrio := 1.0;
+END_IF;
+
 fbMixer(
     rPropel         := fbPropelAxis.rCmd,
     rSteer          := fbSteerAxis.rCmd,
     rSpeedScale     := rSpeedScale,
     rDerate         := rTotalDerate,
-    rSteerGainAtTop := stProfile.rSteerGainAtTop );
+    rSteerGainAtTop := stProfile.rSteerGainAtTop,
+    rSteerPriority  := rSteerPrio );
+
+(* --- rimpull ceiling and slip control ------------------------------------ *)
+fbTraction(
+    rCmdLeft        := fbMixer.rLeft,
+    rCmdRight       := fbMixer.rRight,
+    rPressLeftBar   := HAL.rPropelPressLeftBar,
+    rPressRightBar  := HAL.rPropelPressRightBar,
+    rTrackSpeedL    := HAL.rTrackSpeedLeftKph,
+    rTrackSpeedR    := HAL.rTrackSpeedRightKph,
+    rLongAccel      := HAL.rImuLongAccel,
+    rRimpullSetting := stProfile.rRimpullSetting,
+    xSlipControlOn  := HAL.xSlipControlEnabled,
+    xEnable         := xPropelEnable,
+    rDt             := C_DT_FAST );
 
 fbLeftPump(
-    rCmd        := fbMixer.rLeft,
+    rCmd        := fbTraction.rOutLeft,
     rIThreshold := C_PUMP_I_THRESHOLD,
     rIMax       := C_PUMP_I_MAX,
     xEnable     := xPropelEnable );
 
 fbRightPump(
-    rCmd        := fbMixer.rRight,
+    rCmd        := fbTraction.rOutRight,
     rIThreshold := C_PUMP_I_THRESHOLD,
     rIMax       := C_PUMP_I_MAX,
     xEnable     := xPropelEnable );
@@ -183,3 +227,13 @@ HAL.eActiveInhibit    := eInhibit;
 HAL.xAntiStallActive  := fbAntiStall.xActive;
 HAL.rAntiStallDroop   := fbAntiStall.rDroopRpm;
 HAL.rWorkDerate       := fbAntiStall.rWorkDerate;
+
+(* Crossover feature status - the display makes these visible, because a
+   feature the operator cannot see working is a feature they do not believe
+   in. "Rimpull limiting" showing on screen while the bucket fills is the
+   whole sales demonstration. *)
+HAL.rTractiveEffortPct := fbTraction.rEffortPct;
+HAL.xIndRimpullActive  := fbTraction.xRimpullActive;
+HAL.xIndSlip           := fbTraction.xSlipLeft OR fbTraction.xSlipRight;
+HAL.rGroundSpeedKph    := fbTraction.rGroundSpeedKph;
+HAL.rSteerPriority     := rSteerPrio;

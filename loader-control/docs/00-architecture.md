@@ -220,6 +220,7 @@ loader-control/
     01-hardware-selection.md    controller, grips, valves, engine, bus layout
     02-operator-interface.md    axis assignment, button map, function behaviour
     03-sourcing-and-supply.md   purchase points, second sourcing, ramp strategy
+    04-crossover-concept.md     crawler-loader heritage features, ranked
   src/
     st/                         IEC 61131-3 Structured Text, portable
       GVL_Types.st              enums, structs, tuning constants
@@ -228,6 +229,7 @@ loader-control/
       FB_DriveMixer.st          propel + steer -> left/right track command
       FB_ProportionalOut.st     normalized command -> coil current
       FB_AntiStall.st           engine droop -> propel derate
+      FB_TractiveControl.st     rimpull ceiling, slip control, ground speed
       FB_ButtonInput.st         debounce, short/long/double/hold gestures
       FB_FunctionDispatch.st    binding table -> function requests
       FB_LoaderControl.st       self-level, return-to-dig, float, height limit
