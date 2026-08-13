@@ -225,5 +225,35 @@ position and the rear power budget are cheap today and expensive after tooling.
    below what a hydrostat sized for loader work delivers comfortably. The creep
    mode already in `PRG_Propel` covers part of this, but if row-crop work is in
    scope, say so — it changes the hydrostat sizing conversation with Danfoss.
-4. **Mid-mount PTO?** If mowing decks are in scope, that is a separate drive and
-   it needs deciding before the frame is designed.
+4. ~~**Mid-mount PTO?**~~ **DECIDED: no mid-mount PTO.** See below.
+
+---
+
+## 11. Decided: no mid-mount PTO
+
+The positioning argument is the deciding one. This machine's credibility rests
+on digging and pulling, and a mid-mount deck signals lawn tractor to exactly the
+buyer you need to take it seriously. **Category confusion kills a new machine
+faster than a missing feature does** — a machine that is legible as one thing
+beats a machine that is arguably two.
+
+The engineering falls the same way, which is convenient:
+
+- **The belly becomes a flat sealed skid plate.** On a tracked machine working
+  in brush, mud and crop residue, an uninterrupted underside is worth real
+  money in debris packing and undercarriage wear. A mid drive puts shafts,
+  guards and grease points in the worst possible place to service.
+- **Ground clearance and approach angle stay clean.** A mid drive compromises
+  both, on a machine whose whole pitch is going where wheels cannot.
+- **Frame centre stays free** for fuel and hydraulic tank volume — which the
+  bigger engine and the PTO circuit both now need.
+- **One less drive path, clutch, guard and failure mode**, and the cost that
+  goes with them.
+
+**Nothing real is lost.** Brush and field mowing move to a rotary cutter on the
+three-point, which is where that work belongs anyway, and a rear-discharge
+finish mower on the hitch covers the rest. What gets given up is *lawn* mowing
+positioning — which is precisely the thing worth giving up.
+
+No control-system impact: no mid PTO means no second clutch, no second speed
+supervision, no additional interlock path. `FB_PtoControl` supervises one shaft.
