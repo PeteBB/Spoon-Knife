@@ -224,6 +224,7 @@ loader-control/
     05-rear-implement-architecture.md  3-point hitch, PTO, engine orientation
     06-frame-balance-and-stability.md  load cases, ballast, load moment
     07-dozing-and-drawbar.md    capacity/pull trade, blade mounting, grade control
+    08-dozer-attachment-integration.md  push link, load-path modes
   src/
     st/                         IEC 61131-3 Structured Text, portable
       GVL_Types.st              enums, structs, tuning constants
@@ -238,6 +239,7 @@ loader-control/
       FB_HeadlandSequence.st    two-press headland turn sequencing
       FB_LoadMoment.st          payload weighing, stability margin, raise limit
       FB_BladeControl.st        cross-slope hold, blade load control
+      FB_DozerMode.st           push-link load path, rimpull scheduling
       FB_ButtonInput.st         debounce, short/long/double/hold gestures
       FB_FunctionDispatch.st    binding table -> function requests
       FB_LoaderControl.st       self-level, return-to-dig, float, height limit

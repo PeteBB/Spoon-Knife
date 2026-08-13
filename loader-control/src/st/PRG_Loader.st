@@ -33,6 +33,8 @@ VAR
     fbLoader     : FB_LoaderControl;
     fbAux        : FB_AuxControl;
     fbLoadMoment : FB_LoadMoment;
+    fbDozer      : FB_DozerMode;
+    rRaiseLimit  : REAL;
 
     (* --- configuration, restored from NVM at startup ---------------------- *)
     astBindings  : ARRAY[0..C_MAX_BINDINGS-1] OF ST_ButtonBinding;
@@ -203,10 +205,39 @@ fbLoadMoment(
     rDt              := C_DT_MED );
 
 (* =========================================================================
+   6c. Dozer load-path mode
+   -------------------------------------------------------------------------
+   Determines whether blade thrust is going into the frame through the push
+   link or into the loader arms, and scales the rimpull ceiling accordingly.
+   The rimpull scale crosses to PRG_Propel via the HAL, the same way the
+   anti-stall work derate does.
+
+   This block does NOT enforce the structural limit - the slot geometry and the
+   mechanical backstop do. See docs/08-dozer-attachment-integration.md section 2.
+   ========================================================================= *)
+fbDozer(
+    stAttach          := stAttach,
+    xProfileValid     := stAttach.xIsRecognised,
+    rBoomAngleDeg     := HAL.rBoomAngleDeg,
+    xBoomAngleValid   := HAL.xBoomAngleValid,
+    xPushLinkSensor   := HAL.xPushLinkEngaged,
+    xLinkSensorFitted := HAL.xPushLinkSensorFitted,
+    xEnable           := xLoaderEnable,
+    rDt               := C_DT_MED );
+
+(* =========================================================================
    7. Publish to the valve bank and the display
    ========================================================================= *)
+(* Two independent raise limits - stability margin and dozer load path. Take
+   the more restrictive. Neither touches lowering. *)
+IF fbDozer.rRaiseLimit < fbLoadMoment.rRaiseLimit THEN
+    rRaiseLimit := fbDozer.rRaiseLimit;
+ELSE
+    rRaiseLimit := fbLoadMoment.rRaiseLimit;
+END_IF;
+
 IF fbLoader.rLiftOut > 0.0 THEN
-    HAL.rPvgLiftCmd := fbLoader.rLiftOut * fbLoadMoment.rRaiseLimit;
+    HAL.rPvgLiftCmd := fbLoader.rLiftOut * rRaiseLimit;
 ELSE
     HAL.rPvgLiftCmd := fbLoader.rLiftOut;
 END_IF;
@@ -228,3 +259,11 @@ HAL.xPayloadValid   := fbLoadMoment.xWeightValid;
 HAL.rStabilityPct   := fbLoadMoment.rStabilityPct;
 HAL.eStabilityWarn  := fbLoadMoment.eWarnLevel;
 HAL.xMsgOverload    := fbLoadMoment.xOverload;
+
+(* Consumed by PRG_Propel on the 10 ms task. *)
+HAL.rDozerRimpullScale := fbDozer.rRimpullScale;
+HAL.ePushRegime        := fbDozer.ePushRegime;
+HAL.xDozerActive       := fbDozer.xDozerActive;
+HAL.xMsgReducedPush    := fbDozer.xMsgReducedPush;
+HAL.xMsgPushLinkFault  := fbDozer.xLinkFault;
+HAL.xMsgDozerConfig    := fbDozer.xConfigFault;

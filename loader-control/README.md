@@ -66,7 +66,7 @@ raise the front blade. Same problem, three actuators, deliberate ordering.
 
 | Question | Blocks |
 |---|---|
-| Blade carrier: standard quick-attach, or a dedicated carrier on the arms? | Aux section count, whether cross-slope needs its own tilt sensor |
+| Slot geometry — the boom angle at which the push pin disengages | `FB_DozerMode` needs this one number; everything else follows |
 | Aux section count — a 6-way blade needs three more proportional functions | Valve bank order |
 | Hitch category — Cat 1, or Cat 1 with Cat 2 pin options? | Hitch design |
 | PTO speeds — 540 only, or 540/540E? | Gearbox spec |
@@ -99,6 +99,7 @@ during development**, not first attempted during a shortage.
 | `FB_AuxControl` | Proportional aux, modulating detent, high-flow interlocks, pressure protection |
 | `FB_LoadMoment` | Payload weighing, pitch-corrected stability margin, progressive raise limit |
 | `FB_BladeControl` | Cross-slope hold (2D grade), blade load control |
+| `FB_DozerMode` | Push-link load-path detection, rimpull scheduling by boom height |
 | `FB_PtoControl` | Three-phase clutch engagement, droop-aware ramp, mandatory re-request |
 | `FB_HitchControl` | Position, draft, and slip-referenced draft augmentation |
 | `FB_HeadlandSequence` | Two-press headland turn, correctly ordered both directions |
@@ -151,3 +152,4 @@ Anything that does not serve those is a candidate for deletion, not debate.
 | `05-rear-implement-architecture.md` | Hitch, PTO, engine orientation, regulatory |
 | `06-frame-balance-and-stability.md` | Load cases, ballast strategy, load moment |
 | `07-dozing-and-drawbar.md` | Capacity/pull trade, blade mounting, grade control |
+| `08-dozer-attachment-integration.md` | Push link over-constraint, load-path modes |

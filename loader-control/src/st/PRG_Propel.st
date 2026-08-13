@@ -197,7 +197,11 @@ fbTraction(
     rTrackSpeedL    := HAL.rTrackSpeedLeftKph,
     rTrackSpeedR    := HAL.rTrackSpeedRightKph,
     rLongAccel      := HAL.rImuLongAccel,
-    rRimpullSetting := stProfile.rRimpullSetting,
+    (* Operator's ceiling, scaled by the dozer load path. When blade thrust is
+       going through the loader arms rather than the frame push link, the
+       machine declines to generate force the arms cannot carry - see
+       FB_DozerMode. Outside dozer mode this scale is 1.0. *)
+    rRimpullSetting := stProfile.rRimpullSetting * HAL.rDozerRimpullScale,
     xSlipControlOn  := HAL.xSlipControlEnabled,
     xEnable         := xPropelEnable,
     rDt             := C_DT_FAST );

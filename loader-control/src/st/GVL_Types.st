@@ -121,7 +121,25 @@ TYPE
         rMaxPressureBar  : REAL := 210.0;  (* aux circuit protection limit    *)
         rSoftStartS      : REAL := 0.5;    (* ramp when leaving neutral       *)
         xIsRecognised    : BOOL := FALSE;  (* FALSE = dumb/unknown attachment *)
+
+        (* --- dozer blade with a frame push link, see doc 08 --------------- *)
+        xIsDozer         : BOOL := FALSE;
+        (* Boom angle at which the push-link pin runs out of its slot. Below
+           this, thrust goes into the frame; above it, into the loader arms.
+           THE defining number for FB_DozerMode - comes from the slot geometry. *)
+        rSlotTopDeg      : REAL := 22.0;
+        rSlotFadeDeg     : REAL := 6.0;    (* hand-over band below slot top   *)
+        (* Rimpull ceiling once thrust is going through the arms. *)
+        rArmsRimpullMax  : REAL := 0.35;
     END_STRUCT;
+
+    E_PushRegime : (
+        PUSH_NONE        := 0,   (* no dozer fitted                          *)
+        PUSH_FRAME       := 1,   (* pin in the slot - the strong path        *)
+        PUSH_TRANSITION  := 2,   (* handing over                             *)
+        PUSH_ARMS        := 3,   (* pin disengaged - the weak path           *)
+        PUSH_CONSERVATIVE:= 4    (* something is untrusted - assume the worst *)
+    );
 END_TYPE
 
 
