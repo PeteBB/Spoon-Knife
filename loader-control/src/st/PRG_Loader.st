@@ -32,6 +32,7 @@ VAR
     fbTiltAxis   : FB_AxisConditioning;
     fbLoader     : FB_LoaderControl;
     fbAux        : FB_AuxControl;
+    fbLoadMoment : FB_LoadMoment;
 
     (* --- configuration, restored from NVM at startup ---------------------- *)
     astBindings  : ARRAY[0..C_MAX_BINDINGS-1] OF ST_ButtonBinding;
@@ -184,9 +185,31 @@ fbAux(
     rDt             := C_DT_MED );
 
 (* =========================================================================
+   6b. Payload weighing and load moment
+   -------------------------------------------------------------------------
+   The raise limit is applied ONLY to a positive (raise) lift command. Nothing
+   here touches lowering, tilt or propel - lowering the load is the action that
+   resolves an approaching tip, and it stays fully available at every margin.
+   See the header of FB_LoadMoment.
+   ========================================================================= *)
+fbLoadMoment(
+    rLiftPressureBar := HAL.rLiftPressureBar,
+    rBoomAngleDeg    := HAL.rBoomAngleDeg,
+    rBoomRateDegS    := fbLoader.rBoomRateDegS,
+    rPitchDeg        := HAL.rImuPitchDeg,
+    rRollDeg         := HAL.rImuRollDeg,
+    rRearBallastLb   := HAL.rRearBallastLb,
+    xEnable          := xLoaderEnable,
+    rDt              := C_DT_MED );
+
+(* =========================================================================
    7. Publish to the valve bank and the display
    ========================================================================= *)
-HAL.rPvgLiftCmd     := fbLoader.rLiftOut;
+IF fbLoader.rLiftOut > 0.0 THEN
+    HAL.rPvgLiftCmd := fbLoader.rLiftOut * fbLoadMoment.rRaiseLimit;
+ELSE
+    HAL.rPvgLiftCmd := fbLoader.rLiftOut;
+END_IF;
 HAL.rPvgTiltCmd     := fbLoader.rTiltOut;
 HAL.rPvgAuxCmd      := fbAux.rAuxCmd;
 HAL.xLiftFloat      := fbLoader.xFloatOut;
@@ -199,3 +222,9 @@ HAL.xIndDetent      := fbAux.xDetentActive;
 HAL.xIndHighFlow    := fbAux.xHighFlowActive;
 HAL.xMsgHighFlowNo  := fbAux.xHighFlowDenied;
 HAL.xMsgAuxPressure := fbAux.xPressureLimit;
+
+HAL.rPayloadLb      := fbLoadMoment.rLastGoodLb;
+HAL.xPayloadValid   := fbLoadMoment.xWeightValid;
+HAL.rStabilityPct   := fbLoadMoment.rStabilityPct;
+HAL.eStabilityWarn  := fbLoadMoment.eWarnLevel;
+HAL.xMsgOverload    := fbLoadMoment.xOverload;

@@ -222,6 +222,7 @@ loader-control/
     03-sourcing-and-supply.md   purchase points, second sourcing, ramp strategy
     04-crossover-concept.md     crawler-loader heritage features, ranked
     05-rear-implement-architecture.md  3-point hitch, PTO, engine orientation
+    06-frame-balance-and-stability.md  load cases, ballast, load moment
   src/
     st/                         IEC 61131-3 Structured Text, portable
       GVL_Types.st              enums, structs, tuning constants
@@ -234,6 +235,7 @@ loader-control/
       FB_PtoControl.st          modulated clutch engagement, PTO supervision
       FB_HitchControl.st        position/draft/slip-referenced hitch control
       FB_HeadlandSequence.st    two-press headland turn sequencing
+      FB_LoadMoment.st          payload weighing, stability margin, raise limit
       FB_ButtonInput.st         debounce, short/long/double/hold gestures
       FB_FunctionDispatch.st    binding table -> function requests
       FB_LoaderControl.st       self-level, return-to-dig, float, height limit

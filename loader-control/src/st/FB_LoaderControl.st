@@ -40,6 +40,7 @@ VAR_OUTPUT
     xSelfLevelOn    : BOOL;
     xAssistActive   : BOOL;   (* RTD/RTC running - display indicator          *)
     xAtHeightLimit  : BOOL;
+    rBoomRateDegS   : REAL;   (* filtered, published for payload weighing     *)
 END_VAR
 
 VAR CONSTANT
@@ -108,7 +109,8 @@ END_IF;
 
 rBoomVel     := (rBoomAngleDeg - rBoomPrev) / rDt;
 rBoomPrev    := rBoomAngleDeg;
-rBoomVelFilt := rBoomVelFilt + 0.25 * (rBoomVel - rBoomVelFilt);
+rBoomVelFilt  := rBoomVelFilt + 0.25 * (rBoomVel - rBoomVelFilt);
+rBoomRateDegS := rBoomVelFilt;
 
 (* --- teach and toggle ---------------------------------------------------- *)
 IF xTeachDig       THEN rDigAngle    := rGroundAngle;  END_IF;
