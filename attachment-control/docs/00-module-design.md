@@ -128,6 +128,66 @@ but the wrong tool for a reliable low-latency link in this environment.
 | Packet | Pairing ID, sequence counter, button states, CRC |
 | Pairing | Learned, stored in NVM, button-initiated |
 
+### Connectionless, not connection-oriented — and this is the whole trick
+
+The instinct is to think of this like a Bluetooth pairing: negotiate a
+connection, maintain it, reconnect if it drops. **Do not build it that way.**
+
+| | Bluetooth model | What this uses |
+|---|---|---|
+| Analogy | A phone call — dial, connect, redial if dropped | A radio station — broadcast on an ID, tune in |
+| State | Connection maintained by both ends | **None** |
+| Interference burst | *Disconnect*, then reconnect negotiation | Two packets lost out of five; nobody notices |
+| Recovery time | Hundreds of ms to seconds | The next packet, 50 ms later |
+
+The transmitter simply **broadcasts a packet every 50 ms whether or not anyone
+is listening.** The receiver acts on any packet carrying the right pairing ID
+and a good CRC. There is no session, no handshake, no connection state.
+
+**Because there is no connection, there is nothing to lose.** A burst of
+interference that would drop a Bluetooth link and strand the operator waiting
+for reconnection costs this link two packets out of the five it takes to trip
+the watchdog — the operator never knows it happened. And when the radio path
+does break properly, recovery is not a negotiation, it is just the next good
+packet arriving.
+
+This is how RC models and industrial radio remotes work, and it is the correct
+model for anything a human thumb is driving in real time.
+
+The **pairing concept still applies** — you pair once and it remembers. But the
+pairing is just a shared ID number stored in NVM, not a maintained session.
+
+### What actually makes it reliable
+
+1. **Statelessness** — nothing to re-establish
+2. **Redundancy** — 20 Hz transmit, five consecutive misses before anything happens
+3. **Frequency hopping** — spreads across the band so a narrowband interferer
+   cannot camp on you. Worth specifying: in the US, frequency-hopping and
+   digital modulation schemes in 902–928 MHz have more favourable power limits
+   than narrowband operation. Confirm the specifics with the module vendor.
+4. **Sequence numbers** — reject replays and out-of-order frames
+5. **CRC** — reject corruption before it reaches the command path
+
+### Where Bluetooth *does* belong
+
+Not on the control path — but it is the right tool for a **configuration and
+diagnostics app**: pairing setup, channel assignment, coil fault readout,
+firmware update from a phone.
+
+Two radios, two jobs. That is a Phase 3 nicety though; Phase 1 and 2 can
+configure with a button and a status LED.
+
+### Latency budget
+
+Short FSK packets at 50 kbps arrive in single-digit milliseconds. With a 50 ms
+transmit interval, worst-case command latency is about 50 ms — comfortably
+inside what feels immediate for on/off control.
+
+If proportional control is added later, raise the rate to 50 Hz. **This is
+precisely why LoRa is the wrong choice** — its range comes from spreading
+factors that add tens of milliseconds, which is invisible in telemetry and
+unpleasant under a thumb.
+
 ---
 
 ## 5. Safety architecture — the part that must be right
