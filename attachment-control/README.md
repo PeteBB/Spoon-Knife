@@ -128,6 +128,7 @@ cheaper, simpler and better than driving everything from the module.
 | `docs/02-acquisition-plan.md` | Staged shopping list, tools, what not to buy yet, budget |
 | `firmware/safety_core.c` | Portable safety core — link watchdog, neutral-before-enable, peak-and-hold driver |
 | `firmware/laser_grade.c` | Pulse-and-settle grade loop, signal-loss handling, stuck detection |
+| `mechanical/grip_clamp.scad` | Parametric joystick-grip clamp and button pod |
 
 ---
 

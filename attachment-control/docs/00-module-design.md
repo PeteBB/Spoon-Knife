@@ -421,3 +421,74 @@ putting into the world. Packaging, pricing, first dealers.
 | **Patents** | Check the competitors' portfolios before investing, particularly around the clip-on transmitter. An hour with an attorney now beats a letter later. |
 | **Theft** | Locking battery bay. Rental fleets will ask about this first. |
 | **Cold** | Test at temperature, and publish the honest number. |
+
+---
+
+## 9. Mounting: capturing grip geometry, and the "use the existing buttons" question
+
+### Can we interface to the machine's existing grip buttons?
+
+**On an OEM machine: no, and it would destroy the product.**
+
+The buttons on a Bobcat or Deere grip are wired into that machine's harness and
+read by that machine's controller. To use them you would have to tap into the
+machine's wiring — which is *precisely* the brand-specific wiring-diagram
+frustration this product exists to eliminate. You would need a different
+adapter, a different pinout and a different install procedure per brand, and
+you would be back to "only works on your machine."
+
+**It fails the one-sentence test at the top of the README.** Reject it.
+
+### The one legitimate middle path
+
+Many skid steers carry a **7-pin or 14-pin attachment connector** at the front,
+which already brings switched signals out to the attachment plate — no harness
+work required. Where a machine has one, an **optional adapter cable** could feed
+those existing signals into the module instead of the clip.
+
+Treat that as an **accessory for the two or three most common pinouts**, never
+the core product. The clip is what works everywhere; the adapter is a
+convenience for machines that happen to be wired for it.
+
+### Where Sure Grip / Bailey grips actually matter
+
+Not here. Those are grips you **buy and install** — relevant to the track loader
+project, where CAN grips with spare buttons feed our own controller as Tier 1
+integration. That is already the plan in
+`loader-control/docs/02-operator-interface.md`.
+
+For this product, the customer already owns their grip and we are never
+replacing it. Sure Grip publish technical guides and a CANopen EDS on their
+[downloads page](https://suregripcontrols.com/downloads/); CAD would be a direct
+request to them. Worth having for the loader — not needed for the clip.
+
+### Do not model one grip
+
+A shell modelled precisely to one handle fits exactly one handle. You do not
+control which machines customers own, rubber boots vary by model year, and they
+swell and wear.
+
+**Use a compliant clamp with a parametric bore**, lined with elastomer, held by
+a strap. One design covers a family of diameters; supporting a new machine means
+changing a number, not commissioning CAD.
+
+`mechanical/grip_clamp.scad` is that part — parametric on grip diameter, liner
+thickness, button count and pitch. Measure, set one number, print, fit, adjust,
+reprint. Twenty-minute loop.
+
+> **Print it standing on end**, along the grip axis, so the C opening springs
+> across layer lines rather than along them. Printed flat, it snaps at the
+> opening on the first cold morning.
+
+### Four cheap ways to capture a grip
+
+| Method | Cost | Good for |
+|---|---|---|
+| **Masking tape wrap** | ~$0 | Wrap the grip, mark button positions during the Stage 0 shift, peel it off flat. You get a 2D development of the surface *and* the button locations, from the actual test. Do this one first. |
+| **Contour gauge** | ~$10 | The comb-of-pins tool. Press on, trace the cross-section straight onto paper. Gives you the bore profile directly. |
+| **Moldable thermoplastic** | ~$15 | InstaMorph / Polymorph. Press onto the grip for a physical negative you can measure or mould against. |
+| **Phone photogrammetry or LiDAR** | ~$0 | Free apps produce a mesh easily good enough for a clamp shell. |
+
+The tape wrap is the one to start with, because it comes out of the Stage 0 test
+you are doing anyway — and it records where your thumb *actually* wanted the
+buttons, not where you guessed they should go.
