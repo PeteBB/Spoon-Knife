@@ -124,7 +124,9 @@ cheaper, simpler and better than driving everything from the module.
 | | |
 |---|---|
 | `docs/00-module-design.md` | Full system map: power budget, radio, safety architecture, mechanical, development phases |
+| `docs/01-laser-grade-control.md` | Laser grading components, control approach, failure handling |
 | `firmware/safety_core.c` | Portable safety core — link watchdog, neutral-before-enable, peak-and-hold driver |
+| `firmware/laser_grade.c` | Pulse-and-settle grade loop, signal-loss handling, stuck detection |
 
 ---
 
