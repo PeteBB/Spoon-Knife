@@ -59,13 +59,49 @@ comfortably de-rated engine is exactly right. It also strengthens the anti-stall
 and rimpull strategy — an engine with reserve droops less, so the controller
 intervenes less often and the machine feels stronger still.
 
-### The badge is worth something, and that is not irrational
+### DECIDED: Cummins B4.5
 
-"Cummins powered" genuinely sells machines to farmers. Parts availability is
-everywhere, every rural mechanic has worked on one, and the name buys trust a
-new OEM has not yet earned. For a startup selling an unfamiliar machine, that
-borrowed credibility is a real asset. Do not let anyone talk you out of it as
-mere marketing.
+And the reasoning is stronger than the badge, though the badge is real too.
+
+**Everything else about this machine is unfamiliar.** New manufacturer, unusual
+configuration, a tracked tractor nobody has seen before. The engine is the one
+component the buyer already trusts, and it sits right where they are most
+nervous about taking a chance on an unknown. Borrowed credibility at exactly
+that point is worth a great deal to a first machine.
+
+**But the service network is the better argument.** A farmer ninety miles from
+your dealer can get a Cummins looked at locally, today. That is not marketing —
+that is uptime, and uptime is what ag buyers are actually paying for. A startup
+OEM with a thin dealer network gets to lean on a service footprint it could
+never build itself. Structural advantage, not a sticker.
+
+**A genuine engineering benefit too:** Cummins' J1939 implementation is mature
+and well documented. The anti-stall, TSC1 throttle and PTO integration all
+depend on that interface being clean and properly specified, and this is one of
+the better ones to work against.
+
+### Design the installation to accept the alternate
+
+The one real risk is commercial, not technical: Cummins is structured around
+large accounts, and an OEM relationship at twenty machines a year may be harder
+to obtain and more thinly supported than Kubota or Yanmar would be. Approach
+through a **Cummins distributor** rather than direct — that is the channel that
+serves smaller OEMs.
+
+Mitigate it in the design rather than in hope:
+
+> **Design the engine bay, mounts and cooling interface to accept either the
+> B4.5 or the Kubota V3800.** Similar physical class, similar power. A common
+> bay envelope with a mount adapter plate, a cooling package that fits both, and
+> a harness connector that can be re-pinned means that if the Cummins account
+> does not come together at your volume, you swap engines instead of
+> redesigning the machine.
+
+Per `03-sourcing-and-supply.md`, the engine is the single hardest component on
+this machine to second-source. Designing the installation to accept both is a
+few days of extra work now against a project-stopping problem later. Ask your
+mechanical engineer how close the two can be brought — it may not be perfect,
+but every inch of commonality is insurance.
 
 ### The thing to check before committing
 

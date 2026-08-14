@@ -52,7 +52,7 @@ raise the front blade. Same problem, three actuators, deliberate ordering.
 | Electrical architecture | CAN-centric — grips, valves, display, engine on CAN | `01` |
 | Controller | IFM CR711S, CODESYS, IEC 61131-3 | `01` |
 | Hydraulics | Danfoss H1 hydrostat, PVG 32 + PVED-CC | `01` |
-| Engine | Longitudinal, **Cummins B4.5** de-rated to 100–110 hp; Kubota V3800 alternate | `09` |
+| Engine | Longitudinal, **Cummins B4.5** de-rated to 100–110 hp. Bay designed to also accept Kubota V3800 | `09` |
 | Rear | Cat 1/2 three-point, direct-drive 540 PTO | `05` |
 | Mid-mount PTO | **No** | `05` §11 |
 | Capacity | ~3,000–3,500 lb ROC, 11,000–13,000 lb operating | `07` |
