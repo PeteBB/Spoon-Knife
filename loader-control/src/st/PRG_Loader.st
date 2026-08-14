@@ -35,6 +35,7 @@ VAR
     fbLoadMoment : FB_LoadMoment;
     fbDozer      : FB_DozerMode;
     fbFan        : FB_CoolingFan;
+    fbReservoir  : FB_ReservoirGuard;
     rRaiseLimit  : REAL;
 
     (* --- configuration, restored from NVM at startup ---------------------- *)
@@ -172,6 +173,21 @@ fbLoader(
     rDt             := C_DT_MED );
 
 (* =========================================================================
+   5b. Reservoir supervision
+   -------------------------------------------------------------------------
+   Runs before the aux block so its inhibit takes effect the same scan. Cuts
+   aux and work hydraulics at critical level but never propel - the operator
+   still has to get the machine onto a trailer. See FB_ReservoirGuard.
+   ========================================================================= *)
+fbReservoir(
+    rLevelRawPct    := HAL.rHydLevelPct,
+    rOilTempC       := HAL.rOilTempC,
+    rAttachFillGal  := stAttach.rFillVolumeGal,
+    xAttachCoupling := HAL.xAttachmentChanged,
+    xEnable         := HAL.xEngineRunning,
+    rDt             := C_DT_MED );
+
+(* =========================================================================
    6. Auxiliary hydraulics
    ========================================================================= *)
 fbAux(
@@ -184,7 +200,7 @@ fbAux(
     rOilTempC       := HAL.rOilTempC,
     rEngineRpm      := HAL.rEngineRpm,
     rWorkDerate     := HAL.rWorkDerate,
-    xEnable         := xLoaderEnable,
+    xEnable         := xLoaderEnable AND NOT fbReservoir.xInhibitAux,
     rDt             := C_DT_MED );
 
 (* =========================================================================
@@ -261,7 +277,15 @@ ELSE
     rRaiseLimit := fbLoadMoment.rRaiseLimit;
 END_IF;
 
-IF fbLoader.rLiftOut > 0.0 THEN
+IF fbReservoir.xInhibitWork THEN
+    (* Lowering is still permitted - a raised load must always be able to come
+       down, and it is the action that makes the situation safer. *)
+    IF fbLoader.rLiftOut > 0.0 THEN
+        HAL.rPvgLiftCmd := 0.0;
+    ELSE
+        HAL.rPvgLiftCmd := fbLoader.rLiftOut;
+    END_IF;
+ELSIF fbLoader.rLiftOut > 0.0 THEN
     HAL.rPvgLiftCmd := fbLoader.rLiftOut * rRaiseLimit;
 ELSE
     HAL.rPvgLiftCmd := fbLoader.rLiftOut;
@@ -292,3 +316,11 @@ HAL.xDozerActive       := fbDozer.xDozerActive;
 HAL.xMsgReducedPush    := fbDozer.xMsgReducedPush;
 HAL.xMsgPushLinkFault  := fbDozer.xLinkFault;
 HAL.xMsgDozerConfig    := fbDozer.xConfigFault;
+
+HAL.rHydLevelComp      := fbReservoir.rLevelPct;
+HAL.eHydLevelState     := fbReservoir.eLevelState;
+HAL.rReservoirPropelLimit := fbReservoir.rPropelLimit;
+HAL.rHydLossGalHr      := fbReservoir.rLossRateGalHr;
+HAL.xMsgHydLeak        := fbReservoir.xMsgLeak;
+HAL.xMsgPreConnect     := fbReservoir.xMsgPreConnect;
+HAL.xMsgAddOil         := fbReservoir.xMsgAddOil;

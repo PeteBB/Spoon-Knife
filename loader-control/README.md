@@ -101,6 +101,7 @@ during development**, not first attempted during a shortage.
 | `FB_BladeControl` | Cross-slope hold (2D grade), blade load control |
 | `FB_DozerMode` | Push-link load-path detection, rimpull scheduling by boom height |
 | `FB_CoolingFan` | Variable-speed fan, automatic reversing purge with hot-machine inhibit |
+| `FB_ReservoirGuard` | Temp-compensated level, staged inhibit keeping mobility, leak detection |
 | `FB_PtoControl` | Three-phase clutch engagement, droop-aware ramp, mandatory re-request |
 | `FB_HitchControl` | Position, draft, and slip-referenced draft augmentation |
 | `FB_HeadlandSequence` | Two-press headland turn, correctly ordered both directions |
@@ -156,3 +157,4 @@ Anything that does not serve those is a candidate for deletion, not debate.
 | `08-dozer-attachment-integration.md` | Push link over-constraint, load-path modes |
 | `09-engine-selection.md` | Cummins B4.5, the air-cooled blocker, cooling package |
 | `10-cummins-supplier-questions.md` | Engine supplier call checklist, prioritised |
+| `11-attachment-philosophy.md` | Power plant vs function, two-tier strategy, reservoir |

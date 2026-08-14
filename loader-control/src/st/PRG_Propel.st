@@ -128,7 +128,9 @@ ELSE
     IF rThermalDerate < 0.3 THEN rThermalDerate := 0.3; END_IF;
 END_IF;
 
-rTotalDerate := fbAntiStall.rPropelDerate * rThermalDerate;
+(* Reservoir limit never reaches zero - low oil must not strand the machine. *)
+rTotalDerate := fbAntiStall.rPropelDerate * rThermalDerate
+              * HAL.rReservoirPropelLimit;
 
 (* =========================================================================
    4. Speed mode -> top-speed clamp

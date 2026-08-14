@@ -120,6 +120,9 @@ TYPE
         xAllowReverse    : BOOL := TRUE;   (* FALSE for one-way motors        *)
         rMaxPressureBar  : REAL := 210.0;  (* aux circuit protection limit    *)
         rSoftStartS      : REAL := 0.5;    (* ramp when leaving neutral       *)
+        (* Oil this attachment swallows on coupling if it has drained while
+           stored. Feeds the pre-connect check in FB_ReservoirGuard. *)
+        rFillVolumeGal   : REAL := 0.0;
         xIsRecognised    : BOOL := FALSE;  (* FALSE = dumb/unknown attachment *)
 
         (* --- dozer blade with a frame push link, see doc 08 --------------- *)
@@ -132,6 +135,12 @@ TYPE
         (* Rimpull ceiling once thrust is going through the arms. *)
         rArmsRimpullMax  : REAL := 0.35;
     END_STRUCT;
+
+    E_LevelState : (
+        LVL_OK       := 0,
+        LVL_LOW      := 1,   (* warn, keep working                           *)
+        LVL_CRITICAL := 2    (* cut aux and work hydraulics, KEEP MOBILITY   *)
+    );
 
     E_FanState : (
         FAN_NORMAL     := 0,   (* forward, speed on demand                    *)
