@@ -1,9 +1,15 @@
 # Wireless Attachment Control — M18-Powered Module
 
+> **It doesn't matter what machine. The attachment has the brain.**
+
 A self-contained wireless control for hydraulic attachment functions. Powered by
 a Milwaukee M18 pack, commanding the attachment's own DC stack valve, driven by
 a transmitter that **clips onto the machine's existing joystick**. No wiring
 into the machine. Works on any loader with auxiliary hydraulics.
+
+That line above is the product, the architecture and the marketing position in
+one sentence. Keep it. Everything in this folder is downstream of it, and any
+proposal that makes it less true is a proposal to reject.
 
 ---
 
