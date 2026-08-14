@@ -155,3 +155,4 @@ Anything that does not serve those is a candidate for deletion, not debate.
 | `07-dozing-and-drawbar.md` | Capacity/pull trade, blade mounting, grade control |
 | `08-dozer-attachment-integration.md` | Push link over-constraint, load-path modes |
 | `09-engine-selection.md` | Cummins B4.5, the air-cooled blocker, cooling package |
+| `10-cummins-supplier-questions.md` | Engine supplier call checklist, prioritised |

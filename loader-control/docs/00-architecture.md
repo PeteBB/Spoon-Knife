@@ -226,6 +226,7 @@ loader-control/
     07-dozing-and-drawbar.md    capacity/pull trade, blade mounting, grade control
     08-dozer-attachment-integration.md  push link, load-path modes
     09-engine-selection.md      Cummins B4.5, air-cooled blocker, reversing fan
+    10-cummins-supplier-questions.md  engine supplier call checklist
   src/
     st/                         IEC 61131-3 Structured Text, portable
       GVL_Types.st              enums, structs, tuning constants
