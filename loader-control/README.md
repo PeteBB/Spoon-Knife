@@ -52,7 +52,7 @@ raise the front blade. Same problem, three actuators, deliberate ordering.
 | Electrical architecture | CAN-centric — grips, valves, display, engine on CAN | `01` |
 | Controller | IFM CR711S, CODESYS, IEC 61131-3 | `01` |
 | Hydraulics | Danfoss H1 hydrostat, PVG 32 + PVED-CC | `01` |
-| Engine | Longitudinal, 95–110 hp class | `05` |
+| Engine | Longitudinal, **Cummins B4.5** de-rated to 100–110 hp; Kubota V3800 alternate | `09` |
 | Rear | Cat 1/2 three-point, direct-drive 540 PTO | `05` |
 | Mid-mount PTO | **No** | `05` §11 |
 | Capacity | ~3,000–3,500 lb ROC, 11,000–13,000 lb operating | `07` |
@@ -100,6 +100,7 @@ during development**, not first attempted during a shortage.
 | `FB_LoadMoment` | Payload weighing, pitch-corrected stability margin, progressive raise limit |
 | `FB_BladeControl` | Cross-slope hold (2D grade), blade load control |
 | `FB_DozerMode` | Push-link load-path detection, rimpull scheduling by boom height |
+| `FB_CoolingFan` | Variable-speed fan, automatic reversing purge with hot-machine inhibit |
 | `FB_PtoControl` | Three-phase clutch engagement, droop-aware ramp, mandatory re-request |
 | `FB_HitchControl` | Position, draft, and slip-referenced draft augmentation |
 | `FB_HeadlandSequence` | Two-press headland turn, correctly ordered both directions |
@@ -153,3 +154,4 @@ Anything that does not serve those is a candidate for deletion, not debate.
 | `06-frame-balance-and-stability.md` | Load cases, ballast strategy, load moment |
 | `07-dozing-and-drawbar.md` | Capacity/pull trade, blade mounting, grade control |
 | `08-dozer-attachment-integration.md` | Push link over-constraint, load-path modes |
+| `09-engine-selection.md` | Cummins B4.5, the air-cooled blocker, cooling package |

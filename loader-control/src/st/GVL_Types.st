@@ -133,6 +133,15 @@ TYPE
         rArmsRimpullMax  : REAL := 0.35;
     END_STRUCT;
 
+    E_FanState : (
+        FAN_NORMAL     := 0,   (* forward, speed on demand                    *)
+        FAN_SPINDOWN_F := 1,   (* slowing to stop before reversing            *)
+        FAN_DWELL_A    := 2,   (* stopped - never reverse a spinning fan      *)
+        FAN_REVERSE    := 3,   (* purging the cooler pack                     *)
+        FAN_SPINDOWN_R := 4,
+        FAN_DWELL_B    := 5
+    );
+
     E_PushRegime : (
         PUSH_NONE        := 0,   (* no dozer fitted                          *)
         PUSH_FRAME       := 1,   (* pin in the slot - the strong path        *)

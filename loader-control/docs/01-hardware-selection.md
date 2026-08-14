@@ -129,6 +129,11 @@ new plumbing; specifying it now costs a pump upgrade.
 
 ## Engine
 
+> **Superseded twice — see `09-engine-selection.md` for the current position:**
+> **Cummins B4.5** (Stage V / Tier 4 Final, ~173 hp capable, run de-rated at
+> 100–110 hp), with **Kubota V3800 as the qualified alternate**. Air-cooled
+> Deutz is not available at this power in a Tier 4 Final / Stage V form.
+>
 > **Superseded by the rear-implement decision.** Adding a direct-drive PTO puts
 > 40–50 hp at the shaft on top of the loader, hitch, remotes and propel
 > circuits, and **PTO horsepower is the number ag buyers compare**. Plan on the

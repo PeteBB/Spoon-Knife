@@ -34,6 +34,7 @@ VAR
     fbAux        : FB_AuxControl;
     fbLoadMoment : FB_LoadMoment;
     fbDozer      : FB_DozerMode;
+    fbFan        : FB_CoolingFan;
     rRaiseLimit  : REAL;
 
     (* --- configuration, restored from NVM at startup ---------------------- *)
@@ -224,6 +225,30 @@ fbDozer(
     xLinkSensorFitted := HAL.xPushLinkSensorFitted,
     xEnable           := xLoaderEnable,
     rDt               := C_DT_MED );
+
+(* =========================================================================
+   6d. Cooling fan
+   -------------------------------------------------------------------------
+   Machine-level rather than loader-level, but this is the 50 ms task and
+   cooling does not need its own. Runs regardless of xLoaderEnable - the engine
+   still needs cooling with nobody in the seat.
+   ========================================================================= *)
+fbFan(
+    rCoolantTempC   := HAL.rCoolantTempC,
+    rHydOilTempC    := HAL.rOilTempC,
+    rChargeAirTempC := HAL.rChargeAirTempC,
+    xManualPurgeReq := HAL.xFanPurgeButton,
+    xAutoPurgeOn    := HAL.xAutoPurgeEnabled,
+    xEngineRunning  := HAL.xEngineRunning,
+    xEnable         := TRUE,
+    rDt             := C_DT_MED );
+
+HAL.rFanCmd         := fbFan.rFanCmd;
+HAL.xFanReverse     := fbFan.xFanReverse;
+HAL.rFanDemandPct   := fbFan.rFanDemandPct;
+HAL.xIndFanPurging  := fbFan.xPurging;
+HAL.rMinsToPurge    := fbFan.rMinsToPurge;
+HAL.xMsgPurgeDefer  := fbFan.xPurgeDeferred;
 
 (* =========================================================================
    7. Publish to the valve bank and the display
