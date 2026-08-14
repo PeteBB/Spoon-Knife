@@ -103,6 +103,14 @@ The machine supplies flow and pressure through the standard auxiliary couplers,
 exactly as it always has. The module supplies only the *electrical control* of
 the attachment's own valve. **Nothing connects to the machine electrically.**
 
+**Scope: the module adds functions 2, 3 and 4.** The attachment's primary
+function — open/close on a grapple — stays on the machine's own aux rocker,
+untouched. The module selects which secondary function the machine's flow is
+routed to, which means the operator's rocker is still doing the modulating and
+**every function inherits proportional control for free.** See
+`docs/00-module-design.md` §0 — this is the decision that makes the product
+cheaper, simpler and better than driving everything from the module.
+
 ---
 
 ## 4. Documents

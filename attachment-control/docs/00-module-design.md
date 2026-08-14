@@ -1,5 +1,54 @@
 # Module Design — System Map
 
+## 0. Scope: the module adds functions 2, 3, 4 — it does not replace function 1
+
+**This is the most important decision in the product, and it makes it better in
+five ways at once.**
+
+The attachment's *primary* function — open/close on a grapple, in/out on a
+shear — stays on the machine's own auxiliary rocker, exactly as it works today.
+The module supplies the **secondary** functions: rotate, tilt, clamp, whatever
+the attachment adds beyond the basics.
+
+```
+   MACHINE AUX  ──►  DIVERTER / STACK  ──┬──► FUNCTION 1  (machine rocker)
+   flow + direction         ▲            ├──► FUNCTION 2  ┐
+   + PROPORTIONAL           │            ├──► FUNCTION 3  ├─ module selects
+                            │            └──► FUNCTION 4  ┘
+                     module selects which
+```
+
+### Why this is better than the module driving everything
+
+1. **Every function gets proportional control for free.** The machine's rocker
+   is still doing the modulating — the module only *selects where the flow
+   goes*. Feathering a rotate is suddenly as good as feathering the grapple,
+   which is something the competitor products cannot offer at all.
+2. **The module becomes a selector, not a controller.** On/off solenoids only.
+   No proportional drivers, no current-control loops, cheaper BOM, simpler
+   firmware.
+3. **Lower power draw**, because selection solenoids are energised briefly and
+   in fewer combinations than modulating coils would be.
+4. **Nothing existing is disturbed.** The primary function's plumbing and
+   controls are untouched, which makes installation far less intimidating.
+5. **It is a much easier sell.** "Keep everything you have and add three
+   functions" beats "replace how your attachment is controlled."
+
+### The trade-off, stated plainly
+
+Selection means **one function at a time** — you cannot rotate and clamp
+simultaneously. For nearly every attachment in this class that is exactly how
+they already work, so it costs nothing real. Note it in the manual and move on.
+
+### What this means for the hardware
+
+The module's outputs drive **diverter and selector solenoids**, not modulating
+coils. Channel count drops, drivers get simpler, and the peak-and-hold strategy
+matters even more — a selection solenoid may sit energised for the whole time
+an operator is using function 3.
+
+---
+
 ## 1. Two units, one job
 
 | | **Attachment module** | **Joystick clip** |
@@ -263,6 +312,73 @@ not a production change.
 you get free coverage of machines you have never touched, and it is consistent
 with publishing the attachment interface on the big machine. A competitor
 tooling moulded plastic cannot follow you there.
+
+---
+
+## 6a. Grade control — what is real, and what is a different product
+
+Worth taking seriously, because part of it is genuinely achievable and part of
+it collides with the architecture that makes this product work.
+
+### The structural problem
+
+**Automatic grade control works by moving the blade or bucket** — sensing the
+error and commanding lift or tilt to correct it. On a loader, lift and tilt are
+*machine* functions, driven by the machine's own joystick and valve.
+
+This product's entire value is that **it does not touch the machine.** So an
+automatic system that has to command machine lift is, by definition, a different
+product with a different installation and a different risk profile.
+
+That is not a reason to abandon the idea. It is a reason to be precise about
+which version you are building.
+
+### Three tiers, honestly rated
+
+| Tier | Needs | Touches the machine? | Verdict |
+|---|---|---|---|
+| **Cross-slope hold on an attachment with its own tilt** | IMU only | **No** | **Genuinely achievable. Build this.** |
+| **Indicate-only** — show cut/fill, operator corrects | Elevation reference + display | No | Achievable, useful, cheap |
+| **Full automatic 3D** | RTK GNSS + control of machine lift | **Yes** | Different product |
+
+### Tier 1 is the real opportunity, and it needs no GPS at all
+
+If the attachment has **its own tilt cylinder** — a grading bucket, a box blade
+with hydraulic tilt, a land plane — then the module already controls that
+function, and it can hold a cross-slope using nothing but a cheap IMU.
+
+**No GPS. No base station. No subscription. No machine integration.** An
+accelerometer and the tilt function you were already switching.
+
+That is the same maths as `FB_BladeControl` in the loader project, running on a
+much smaller processor. And for a small grading contractor it delivers most of
+the practical benefit: a flat, consistent cross-slope without hunting the bubble.
+
+### On GPS specifically
+
+Standalone GNSS is ±1–3 **metres**. That is not grade control, it is navigation.
+Useful grade needs **RTK**, which means either a base station on site or an NTRIP
+correction subscription over cellular, plus RTK-capable receiver hardware. The
+receiver alone is into the thousands, and the corrections are a recurring cost.
+
+**For the small-site work this product serves, a rotating laser and receiver is
+the better answer** — a few millimetres of accuracy, no subscription, no
+cellular dependency, and it is what small grading contractors already own and
+understand. If you add an elevation reference, add laser before GPS.
+
+### The discipline point
+
+**Do not put grade control in version 1.**
+
+This is precisely the feature that turns a $5k product that ships into a $50k
+product that does not. Functions 2, 3 and 4 are the thing people will buy today,
+and shipping them earns the customers and revenue that make grade control
+worth building.
+
+Sequence it: **v1 functions. v2 cross-slope on tilt attachments. v3 elevation
+reference, laser first.** Each tier is sellable on its own, and each one funds
+the next — the same staged logic that made this product the right first step
+over the machine.
 
 ---
 
